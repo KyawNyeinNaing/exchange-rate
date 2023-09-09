@@ -3,29 +3,20 @@ import React from "react";
 import AutoComplete from "./components/Combobox";
 import Button from "./components/Button";
 import InputText from "./components/Input";
+import { FetchAPI } from "@/utils/api";
+import { CurrencyList, CurrencyLive } from "@/types/currency";
 
 export const metadata: Metadata = {
   title: "Exchange Rate",
   description: "Exchange Rate"
 };
 
-async function fetchCurrencies() {
-  const response = await fetch(
-    "http://apilayer.net/api/live?access_key=48da1f6e032599b655161fceff498c5e",
-    {
-      next: {
-        revalidate: 60
-      }
-    }
-  );
-  const repos = await response.json();
-  return repos;
-}
-
 const Page = async () => {
-  const currencies = await fetchCurrencies();
-
-  console.log(currencies?.source);
+  const fetchApi = new FetchAPI("48da1f6e032599b655161fceff498c5e");
+  const currencyLive = (await fetchApi.getLive("live")) as CurrencyLive;
+  const currenciesList = (await fetchApi.getCurrenciesLists(
+    "list"
+  )) as CurrencyList;
 
   return (
     <div className="grid grid-cols-12">
@@ -37,11 +28,11 @@ const Page = async () => {
             </h3>
             <div className="flex flex-col items-center gap-y-[16px] space-y-[16px]">
               <div className="flex justify-start gap-x-[24px]">
-                <AutoComplete />
+                <AutoComplete values={currenciesList?.currencies} />
                 <AutoComplete />
               </div>
               <div className="flex justify-start gap-x-[24px]">
-                <AutoComplete />
+                {/* <AutoComplete /> */}
                 <InputText />
               </div>
               <div>

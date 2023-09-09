@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
@@ -13,9 +13,17 @@ const people = [
   { id: 6, name: "Hellen Schmidt" }
 ];
 
-const AutoComplete = () => {
+type Props = {
+  values: {
+    [key: string]: string;
+  };
+};
+
+const AutoComplete: React.FC<Props> = ({ values }: Props) => {
   const [selected, setSelected] = useState(people[0]);
   const [query, setQuery] = useState("");
+
+  console.log(values);
 
   const filteredPeople =
     query === ""
