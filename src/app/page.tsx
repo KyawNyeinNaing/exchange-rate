@@ -29,7 +29,7 @@ const Page = async () => {
             <div className="flex flex-col items-center gap-y-[16px] space-y-[16px]">
               <div className="flex justify-start gap-x-[24px]">
                 <AutoComplete values={currenciesList?.currencies} />
-                <AutoComplete />
+                {/* <AutoComplete /> */}
               </div>
               <div className="flex justify-start gap-x-[24px]">
                 {/* <AutoComplete /> */}
