@@ -1,11 +1,13 @@
 import React from 'react';
 
 type Props = {
+  value: string;
   name?: string;
   addonIcon?: JSX.Element;
+  readOnly?: boolean;
 };
 
-const Input: React.FC<Props> = ({ name, ...rest }: Props) => {
+const InputText: React.FC<Props> = ({ name, ...rest }: Props) => {
   return (
     <div className="relative mt-2 rounded-md shadow-sm">
       <input
@@ -19,4 +21,4 @@ const Input: React.FC<Props> = ({ name, ...rest }: Props) => {
   );
 };
 
-export default Input;
+export default InputText;

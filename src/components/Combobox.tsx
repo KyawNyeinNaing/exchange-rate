@@ -10,18 +10,25 @@ type Props = {
     key: string;
     value: string;
   }[];
+  getValue?: (val?: string) => void;
 };
 
-const AutoComplete: React.FC<Props> = ({ values }: Props) => {
+const AutoComplete: React.FC<Props> = ({ values, getValue }: Props) => {
   const [selected, setSelected] = useState(
-    () => values.find(item => item.key.toLowerCase() === SELECTED_VALUE.MMK) || values[0]
+    () => values.find(item => item.key.toLowerCase() === SELECTED_VALUE.USD) || values[0]
   );
   const [query, setQuery] = useState('');
   const filteredValue = filterValuesByQuery(query, values);
 
   return (
     <div>
-      <Combobox value={selected} onChange={setSelected}>
+      <Combobox
+        value={selected}
+        onChange={val => {
+          setSelected(val);
+          getValue(val?.key);
+        }}
+      >
         <div className="relative mt-1">
           <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm border border-neutral-700">
             <Combobox.Input

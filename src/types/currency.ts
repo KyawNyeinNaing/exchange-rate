@@ -8,7 +8,7 @@ export interface CurrencyList {
 }
 
 export interface CurrencyLive {
-  currencies: {
+  quotes: {
     [key: string]: number;
   };
   source: string;
@@ -16,4 +16,13 @@ export interface CurrencyLive {
   success?: boolean;
   terms?: string;
   timestamp?: number;
+}
+
+export interface Rates {
+  rates: {
+    [key: string]: string;
+  };
+  valid?: boolean;
+  updated?: number;
+  base?: string;
 }

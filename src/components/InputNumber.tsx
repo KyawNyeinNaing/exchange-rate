@@ -6,9 +6,10 @@ type Props = {
   addonIcon?: JSX.Element;
   min?: number;
   max?: number;
+  onChange?: (arg?: any) => void;
 };
 
-const InputNumber: React.FC<Props> = ({ name, addonIcon, ...rest }: Props) => {
+const InputNumber: React.FC<Props> = ({ name, addonIcon, onChange, ...rest }: Props) => {
   return (
     <div className="relative mt-2 rounded-md shadow-sm">
       {addonIcon && (
@@ -22,6 +23,7 @@ const InputNumber: React.FC<Props> = ({ name, addonIcon, ...rest }: Props) => {
         aria-describedby="price-currency"
         type="number"
         name={name}
+        onChange={onChange}
         onKeyPress={e => {
           const validCharacters = /^[0-9\b]+$/;
           if (!validCharacters.test(e.key)) {

@@ -1,18 +1,25 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AutoComplete from '@/components/Combobox';
 import Button from '@/components/Button';
 import InputNumber from '@/components/InputNumber';
 import { Typography } from '@material-tailwind/react';
-import { CurrencyList, CurrencyLive } from '@/types/currency';
+import { CurrencyList, CurrencyLive, Rates } from '@/types/currency';
+import InputText from '@/components/InputText';
+import { SELECTED_VALUE } from '@/utils/enum';
 
-type Props = {
-  currencies: CurrencyList;
-};
+const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates }: CurrencyList & Rates) => {
+  const [destinationValue, setDestinationValue] = useState<number>(0);
+  const [sourceCurrency, setSourceCurrency] = useState<string>(SELECTED_VALUE.USD.toUpperCase());
+  const [destinationCurrency, setDestinationCurrency] = useState<string>(SELECTED_VALUE.MMK.toUpperCase());
+  const [sourceValue, setSourceValue] = useState(1);
 
-const ExchangeRate: React.FC<Props> = ({ currencies }: Props) => {
+  useEffect(() => {
+    calculateExchangeRate(2);
+  }, [destinationCurrency, sourceCurrency]);
+
   // split key and value
-  const resultData = Object?.entries(currencies)?.reduce((result, [key, value]) => {
+  const list = Object?.entries(currencies)?.reduce((result, [key, value]) => {
     result = [
       ...result,
       {
@@ -23,6 +30,15 @@ const ExchangeRate: React.FC<Props> = ({ currencies }: Props) => {
     return result;
   }, [] as { key: string; value: string }[]);
 
+  const calculateExchangeRate = (val: number) => {
+    if (sourceCurrency !== 'Currency' && destinationCurrency !== 'Currency') {
+      setSourceValue(val);
+      setDestinationValue(Number(parseFloat(val * (rates[destinationCurrency] / rates[sourceCurrency])).toFixed(2)));
+    } else {
+      alert('Please Select Currencies');
+    }
+  };
+
   return (
     <div className="grid grid-cols-12">
       <div className="col-start-4 col-span-6">
@@ -31,12 +47,12 @@ const ExchangeRate: React.FC<Props> = ({ currencies }: Props) => {
             <h3 className="text-black text-center text-[24px]">Currency Exchange Rates</h3>
             <div className="flex flex-col items-center gap-y-[16px] space-y-[16px]">
               <div className="flex justify-start gap-x-[24px]">
-                <AutoComplete values={resultData} />
-                <InputNumber min={1} />
+                <AutoComplete values={list} getValue={setSourceCurrency} />
+                <InputNumber min={1} onChange={event => calculateExchangeRate(event.target.value as number)} />
               </div>
               <div className="flex justify-start gap-x-[24px]">
-                <AutoComplete values={resultData} />
-                <InputNumber min={1} />
+                <AutoComplete values={list} getValue={setDestinationCurrency} />
+                <InputText value={destinationValue.toString()} readOnly />
               </div>
             </div>
             <div>
