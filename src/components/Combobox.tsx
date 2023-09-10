@@ -1,8 +1,9 @@
 'use client';
-
-import React, { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Combobox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { filterValuesByQuery } from '@/utils';
+import { SELECTED_VALUE } from '@/utils/enum';
 
 type Props = {
   values: {
@@ -12,27 +13,23 @@ type Props = {
 };
 
 const AutoComplete: React.FC<Props> = ({ values }: Props) => {
-  const [selected, setSelected] = useState<string>('');
-  const [query, setQuery] = useState<string>('');
-
-  const filteredValue =
-    query === ''
-      ? values
-      : values?.filter(
-          each =>
-            each.key.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, '')) ||
-            each.value.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, ''))
-        );
+  const [selected, setSelected] = useState(
+    () => values.find(item => item.key.toLowerCase() === SELECTED_VALUE.MMK) || values[0]
+  );
+  const [query, setQuery] = useState('');
+  const filteredValue = filterValuesByQuery(query, values);
 
   return (
-    <div className="w-72">
+    <div>
       <Combobox value={selected} onChange={setSelected}>
         <div className="relative mt-1">
-          <div className="relative w-full cursor-default overflow-hidden rounded-[5px] bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm border border-neutral-700">
+          <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm border border-neutral-700">
             <Combobox.Input
               className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-              displayValue={(person: any) => person.name}
-              onChange={event => setQuery(event.target.value)}
+              displayValue={(each: any) => each.value}
+              onChange={event => {
+                setQuery(event.target.value);
+              }}
             />
             <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -49,20 +46,20 @@ const AutoComplete: React.FC<Props> = ({ values }: Props) => {
               {filteredValue.length === 0 && query !== '' ? (
                 <div className="relative cursor-default select-none py-2 px-4 text-gray-700">Nothing found.</div>
               ) : (
-                filteredValue.map(each => (
+                filteredValue.map(person => (
                   <Combobox.Option
-                    key={each.key}
+                    key={person.key}
                     className={({ active }) =>
                       `relative cursor-default select-none py-2 pl-10 pr-4 ${
                         active ? 'bg-teal-600 text-white' : 'text-gray-900'
                       }`
                     }
-                    value={each}
+                    value={person}
                   >
                     {({ selected, active }) => (
                       <>
                         <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
-                          {each.value}
+                          {person.value}
                         </span>
                         {selected ? (
                           <span
