@@ -1,38 +1,27 @@
-"use client";
+'use client';
 
-import React, { Fragment, useState } from "react";
-import { Combobox, Transition } from "@headlessui/react";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-
-const people = [
-  { id: 1, name: "Wade Cooper" },
-  { id: 2, name: "Arlene Mccoy" },
-  { id: 3, name: "Devon Webb" },
-  { id: 4, name: "Tom Cook" },
-  { id: 5, name: "Tanya Fox" },
-  { id: 6, name: "Hellen Schmidt" }
-];
+import React, { Fragment, useState } from 'react';
+import { Combobox, Transition } from '@headlessui/react';
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
 type Props = {
   values: {
-    [key: string]: string;
-  };
+    key: string;
+    value: string;
+  }[];
 };
 
 const AutoComplete: React.FC<Props> = ({ values }: Props) => {
-  const [selected, setSelected] = useState(people[0]);
-  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState<string>('');
+  const [query, setQuery] = useState<string>('');
 
-  console.log(values);
-
-  const filteredPeople =
-    query === ""
-      ? people
-      : people.filter((person) =>
-          person.name
-            .toLowerCase()
-            .replace(/\s+/g, "")
-            .includes(query.toLowerCase().replace(/\s+/g, ""))
+  const filteredValue =
+    query === ''
+      ? values
+      : values?.filter(
+          each =>
+            each.key.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, '')) ||
+            each.value.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, ''))
         );
 
   return (
@@ -43,13 +32,10 @@ const AutoComplete: React.FC<Props> = ({ values }: Props) => {
             <Combobox.Input
               className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
               displayValue={(person: any) => person.name}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={event => setQuery(event.target.value)}
             />
             <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-              <ChevronUpDownIcon
-                className="h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
+              <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </Combobox.Button>
           </div>
           <Transition
@@ -57,37 +43,31 @@ const AutoComplete: React.FC<Props> = ({ values }: Props) => {
             leave="transition ease-in duration-100"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
-            afterLeave={() => setQuery("")}
+            afterLeave={() => setQuery('')}
           >
-            <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {filteredPeople.length === 0 && query !== "" ? (
-                <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
-                  Nothing found.
-                </div>
+            <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10">
+              {filteredValue.length === 0 && query !== '' ? (
+                <div className="relative cursor-default select-none py-2 px-4 text-gray-700">Nothing found.</div>
               ) : (
-                filteredPeople.map((person) => (
+                filteredValue.map(each => (
                   <Combobox.Option
-                    key={person.id}
+                    key={each.key}
                     className={({ active }) =>
                       `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                        active ? "bg-teal-600 text-white" : "text-gray-900"
+                        active ? 'bg-teal-600 text-white' : 'text-gray-900'
                       }`
                     }
-                    value={person}
+                    value={each}
                   >
                     {({ selected, active }) => (
                       <>
-                        <span
-                          className={`block truncate ${
-                            selected ? "font-medium" : "font-normal"
-                          }`}
-                        >
-                          {person.name}
+                        <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
+                          {each.value}
                         </span>
                         {selected ? (
                           <span
                             className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                              active ? "text-white" : "text-teal-600"
+                              active ? 'text-white' : 'text-teal-600'
                             }`}
                           >
                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
