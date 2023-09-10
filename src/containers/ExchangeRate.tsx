@@ -15,7 +15,7 @@ const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates }: Cur
   const [sourceValue, setSourceValue] = useState(1);
 
   useEffect(() => {
-    calculateExchangeRate(2);
+    calculateExchangeRate(sourceValue);
   }, [destinationCurrency, sourceCurrency]);
 
   // split key and value
@@ -31,12 +31,22 @@ const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates }: Cur
   }, [] as { key: string; value: string }[]);
 
   const calculateExchangeRate = (val: number) => {
-    if (sourceCurrency !== 'Currency' && destinationCurrency !== 'Currency') {
+    const sourceRate = rates[sourceCurrency];
+    const destinationRate = rates[destinationCurrency];
+    if (typeof sourceRate === 'number' && typeof destinationRate === 'number') {
+      const result = Number((val * (destinationRate / sourceRate)).toFixed(2));
       setSourceValue(val);
-      setDestinationValue(Number(parseFloat(val * (rates[destinationCurrency] / rates[sourceCurrency])).toFixed(2)));
+      setDestinationValue(result);
     } else {
-      alert('Please Select Currencies');
+      console.error('Invalid currency codes');
     }
+  };
+
+  const swapCurrency = () => {
+    setSourceCurrency(destinationCurrency);
+    setDestinationCurrency(sourceCurrency);
+    setDestinationValue(sourceValue);
+    setSourceValue(destinationValue);
   };
 
   return (
@@ -47,24 +57,37 @@ const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates }: Cur
             <h3 className="text-black text-center text-[24px]">Currency Exchange Rates</h3>
             <div className="flex flex-col items-center gap-y-[16px] space-y-[16px]">
               <div className="flex justify-start gap-x-[24px]">
-                <AutoComplete values={list} getValue={setSourceCurrency} />
-                <InputNumber min={1} onChange={event => calculateExchangeRate(event.target.value as number)} />
+                <AutoComplete
+                  values={list}
+                  getValue={setSourceCurrency}
+                  initialVal={sourceCurrency as SELECTED_VALUE}
+                />
+                <InputNumber
+                  min={1}
+                  onChange={event => calculateExchangeRate(event.target.value as number)}
+                  sourceCurrency={sourceCurrency}
+                />
               </div>
               <div className="flex justify-start gap-x-[24px]">
-                <AutoComplete values={list} getValue={setDestinationCurrency} />
+                <AutoComplete
+                  values={list}
+                  getValue={setDestinationCurrency}
+                  initialVal={destinationCurrency as SELECTED_VALUE}
+                />
                 <InputText value={destinationValue.toString()} readOnly />
               </div>
             </div>
             <div>
               <Typography color="black" className="font-[500]">
-                MMK - USD (Rate - 1000)
+                {/* MMK - USD (Rate - 1000) */}
+                {sourceCurrency}-{destinationCurrency} (Rate - {destinationValue})
               </Typography>
               <Typography color="black" className="text-[12px] font-[400]">
                 Last Updated: Sat, 09 Sep 2023 23:07:22 GMT
               </Typography>
             </div>
             <div className="flex justify-center">
-              <Button />
+              <Button onClick={swapCurrency} />
             </div>
           </div>
         </div>

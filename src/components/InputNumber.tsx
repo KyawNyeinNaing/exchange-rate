@@ -7,9 +7,10 @@ type Props = {
   min?: number;
   max?: number;
   onChange?: (arg?: any) => void;
+  sourceCurrency?: string;
 };
 
-const InputNumber: React.FC<Props> = ({ name, addonIcon, onChange, ...rest }: Props) => {
+const InputNumber: React.FC<Props> = ({ name, addonIcon, onChange, sourceCurrency, ...rest }: Props) => {
   return (
     <div className="relative mt-2 rounded-md shadow-sm">
       {addonIcon && (
@@ -34,7 +35,7 @@ const InputNumber: React.FC<Props> = ({ name, addonIcon, onChange, ...rest }: Pr
       />
       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
         <span className="text-gray-500 sm:text-sm" id="price-currency">
-          USD
+          {sourceCurrency}
         </span>
       </div>
     </div>

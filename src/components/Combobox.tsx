@@ -10,13 +10,12 @@ type Props = {
     key: string;
     value: string;
   }[];
-  getValue?: (val?: string) => void;
+  getValue: any;
+  initialVal: SELECTED_VALUE;
 };
 
-const AutoComplete: React.FC<Props> = ({ values, getValue }: Props) => {
-  const [selected, setSelected] = useState(
-    () => values.find(item => item.key.toLowerCase() === SELECTED_VALUE.USD) || values[0]
-  );
+const AutoComplete: React.FC<Props> = ({ values, initialVal, getValue }: Props) => {
+  const [selected, setSelected] = useState(() => values.find(item => item.key === initialVal) || values[0]);
   const [query, setQuery] = useState('');
   const filteredValue = filterValuesByQuery(query, values);
 
