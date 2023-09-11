@@ -12,12 +12,17 @@ type Props = {
   }[];
   getValue: any;
   initialVal: SELECTED_VALUE;
+  className?: string;
 };
 
-const AutoComplete: React.FC<Props> = ({ values, initialVal, getValue }: Props) => {
+const AutoComplete: React.FC<Props> = ({ values, initialVal, getValue, ...rest }: Props) => {
   const [selected, setSelected] = useState(() => values.find(item => item.key === initialVal) || values[0]);
   const [query, setQuery] = useState('');
   const filteredValue = filterValuesByQuery(query, values);
+
+  useEffect(() => {
+    setSelected(() => values.find(item => item.key === initialVal) || values[0]);
+  }, [initialVal]);
 
   return (
     <Combobox
@@ -27,7 +32,7 @@ const AutoComplete: React.FC<Props> = ({ values, initialVal, getValue }: Props) 
         getValue(val?.key);
       }}
     >
-      <div className="relative shadow-sm">
+      <div className={`relative shadow-sm ${rest.className}`}>
         <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm border border-neutral-700">
           <Combobox.Input
             className="w-full h-[40px] border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"

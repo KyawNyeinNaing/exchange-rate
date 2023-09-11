@@ -9,18 +9,27 @@ type Props = {
   defaultValue?: number;
   onChange?: (arg?: any) => void;
   sourceCurrency?: string;
+  className?: string;
 };
 
-const InputNumber: React.FC<Props> = ({ name, addonIcon, onChange, sourceCurrency, defaultValue, ...rest }: Props) => {
+const InputNumber: React.FC<Props> = ({
+  name,
+  addonIcon,
+  onChange,
+  sourceCurrency,
+  defaultValue,
+  className,
+  ...rest
+}: Props) => {
   return (
-    <div className="relative rounded-md shadow-sm">
+    <div className={`relative rounded-md shadow-sm ${className}`}>
       {addonIcon && (
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">{addonIcon}</div>
       )}
       <input
         className={`block w-full h-[40px] rounded-md border-0 py-1.5 ${
           addonIcon ? 'pl-7' : 'pl-3'
-        } pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 outline-1 placeholder:text-gray-400 sm:text-sm sm:leading-6`}
+        } pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 outline-none placeholder:text-gray-400 sm:text-sm sm:leading-6`}
         placeholder="0.00"
         aria-describedby="price-currency"
         type="number"
