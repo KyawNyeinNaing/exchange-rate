@@ -1,14 +1,15 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import AutoComplete from '@/components/Combobox';
-import Button from '@/components/Button';
-import InputNumber from '@/components/InputNumber';
-import { Typography } from '@material-tailwind/react';
-import { CurrencyList, Rates } from '@/types/currency';
-import InputText from '@/components/InputText';
-import { SELECTED_VALUE, WINDOW_SIZE } from '@/utils/enum';
 import { RiSwapFill } from 'react-icons/ri';
+
+import Button from '@/components/Button';
+import AutoComplete from '@/components/Combobox';
+import InputNumber from '@/components/InputNumber';
+import InputText from '@/components/InputText';
 import { useWindowSize } from '@/hooks/useWindowSize';
+import { CurrencyList, Rates } from '@/types/currency';
+import { SELECTED_VALUE, WINDOW_SIZE } from '@/utils/enum';
+import { Typography } from '@material-tailwind/react';
 
 const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates, lastUpdated }: CurrencyList & Rates) => {
   const [destinationValue, setDestinationValue] = useState<number>(0);
@@ -25,16 +26,19 @@ const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates, lastU
   }, [destinationCurrency, sourceCurrency]);
 
   // split key and value
-  const list = Object?.entries(currencies)?.reduce((result, [key, value]) => {
-    result = [
-      ...result,
-      {
-        key,
-        value,
-      },
-    ];
-    return result;
-  }, [] as { key: string; value: string }[]);
+  const list = Object?.entries(currencies)?.reduce(
+    (result, [key, value]) => {
+      result = [
+        ...result,
+        {
+          key,
+          value,
+        },
+      ];
+      return result;
+    },
+    [] as { key: string; value: string }[]
+  );
 
   const calculateExchangeRate = (val: number) => {
     if (typeof sourceRate === 'number' && typeof destinationRate === 'number') {

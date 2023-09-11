@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
-import { FetchAPI } from '@/utils/api';
+
 import { CurrencyList, Rates } from '@/types/currency';
+import { FetchAPI } from '@/utils/api';
+
 import ExchangeRate from '../containers/ExchangeRate';
 const dayjs = require('dayjs');
 

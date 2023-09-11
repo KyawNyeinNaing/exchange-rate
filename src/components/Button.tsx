@@ -1,5 +1,4 @@
 'use client';
-
 import { Button as MTButton } from '@material-tailwind/react';
 
 type Props = {

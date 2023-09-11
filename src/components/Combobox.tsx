@@ -1,10 +1,11 @@
 'use client';
 import { Fragment, useEffect, useState } from 'react';
-import { Combobox, Transition } from '@headlessui/react';
-import { MdCheck } from 'react-icons/md';
 import { IoChevronDownCircleOutline } from 'react-icons/io5';
+import { MdCheck } from 'react-icons/md';
+
 import { filterValuesByQuery } from '@/utils';
 import { SELECTED_VALUE } from '@/utils/enum';
+import { Combobox, Transition } from '@headlessui/react';
 
 type Props = {
   values: {
@@ -78,7 +79,7 @@ const AutoComplete: React.FC<Props> = ({ values, initialVal, getValue, ...rest }
                             active ? 'text-white' : 'text-teal-600'
                           }`}
                         >
-                          <MdCheck className={`h-5 w-5`} />
+                          <MdCheck className={'h-5 w-5'} />
                         </span>
                       ) : null}
                     </>
