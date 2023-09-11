@@ -1,7 +1,8 @@
 'use client';
 import { Fragment, useEffect, useState } from 'react';
 import { Combobox, Transition } from '@headlessui/react';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { MdCheck } from 'react-icons/md';
+import { IoChevronDownCircleOutline } from 'react-icons/io5';
 import { filterValuesByQuery } from '@/utils';
 import { SELECTED_VALUE } from '@/utils/enum';
 
@@ -42,7 +43,7 @@ const AutoComplete: React.FC<Props> = ({ values, initialVal, getValue, ...rest }
             }}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-            <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+            <IoChevronDownCircleOutline className="h-5 w-5 text-gray-400" />
           </Combobox.Button>
         </div>
         <Transition
@@ -77,7 +78,7 @@ const AutoComplete: React.FC<Props> = ({ values, initialVal, getValue, ...rest }
                             active ? 'text-white' : 'text-teal-600'
                           }`}
                         >
-                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                          <MdCheck className={`h-5 w-5`} />
                         </span>
                       ) : null}
                     </>
