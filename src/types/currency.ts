@@ -1,13 +1,14 @@
-export interface CurrencyList {
+export type CurrencyList = {
   currencies: {
     [key: string]: string;
   };
   privacy?: string;
   success?: boolean;
   terms?: string;
-}
+  lastUpdated?: string;
+};
 
-export interface CurrencyLive {
+export type CurrencyLive = {
   quotes: {
     [key: string]: number;
   };
@@ -16,13 +17,35 @@ export interface CurrencyLive {
   success?: boolean;
   terms?: string;
   timestamp?: number;
-}
+  lastUpdated?: string;
+};
 
-export interface Rates {
+export type Rates = {
   rates: {
     [key: string]: string;
   };
   valid?: boolean;
   updated?: number;
   base?: string;
-}
+  lastUpdated?: string;
+};
+
+export type ApiResponse = {
+  currencies: {
+    [key: string]: string;
+  };
+  privacy: string;
+  success: boolean;
+  terms: string;
+  rates: {
+    [key: string]: string;
+  };
+  valid: boolean;
+  updated: number;
+  base: string;
+  lastUpdated: string;
+  quotes: {
+    [key: string]: number;
+  };
+  source: string;
+};

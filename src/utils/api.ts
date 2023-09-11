@@ -1,3 +1,6 @@
+import { ApiResponse, CurrencyList, CurrencyLive, Rates } from '@/types/currency';
+import dayjs from 'dayjs';
+
 interface ParameterType {
   [key: string]: string | string[];
 }
@@ -5,19 +8,30 @@ interface ParameterType {
 export class FetchAPI {
   constructor() {}
 
-  async sendApiRequest(path: string, parameters: ParameterType, apiDomain: string, method: string = 'GET') {
+  async sendApiRequest(
+    path: string,
+    parameters: ParameterType,
+    apiDomain: string,
+    method: string = 'GET'
+  ): Promise<ApiResponse> {
     const queryString = new URLSearchParams(parameters as any);
 
     return await fetch(`${apiDomain}/${path}?${queryString.toString()}`, {
       method,
+      next: {
+        revalidate: 3600,
+      },
     })
-      .then(async r => {
-        const res = await r.json();
-        return res;
+      .then(async (res: Response) => {
+        const result = await res.json();
+        return {
+          ...result,
+          lastUpdated: dayjs().format('ddd, DD MMM YYYY HH:mm:ss [GMT]'),
+        };
       })
-      .catch(e => {
-        console.log('ERROR ==>', JSON.stringify(e));
-        throw new Error(e?.message);
+      .catch((error: Error) => {
+        console.log('ERROR ==>', JSON.stringify(error));
+        throw new Error(error?.message);
       });
   }
 
@@ -26,7 +40,7 @@ export class FetchAPI {
     params: ParameterType = {
       access_key: '48da1f6e032599b655161fceff498c5e',
     }
-  ) {
+  ): Promise<CurrencyLive> {
     return await this.sendApiRequest(path, params, 'http://apilayer.net');
   }
 
@@ -35,7 +49,7 @@ export class FetchAPI {
     params: ParameterType = {
       access_key: '48da1f6e032599b655161fceff498c5e',
     }
-  ) {
+  ): Promise<CurrencyList> {
     return await this.sendApiRequest(path, params, 'http://apilayer.net');
   }
 
@@ -44,7 +58,7 @@ export class FetchAPI {
     params: ParameterType = {
       key: '4eNFMF5n4W5lUCfCoHNwC5tjrcfHlc1NsDwI',
     }
-  ) {
+  ): Promise<Rates> {
     return await this.sendApiRequest(path, params, 'https://currencyapi.net');
   }
 }

@@ -7,12 +7,15 @@ import { Typography } from '@material-tailwind/react';
 import { CurrencyList, CurrencyLive, Rates } from '@/types/currency';
 import InputText from '@/components/InputText';
 import { SELECTED_VALUE } from '@/utils/enum';
+import dayjs from 'dayjs';
 
-const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates }: CurrencyList & Rates) => {
+const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates, lastUpdated }: CurrencyList & Rates) => {
   const [destinationValue, setDestinationValue] = useState<number>(0);
   const [sourceCurrency, setSourceCurrency] = useState<string>(SELECTED_VALUE.USD.toUpperCase());
   const [destinationCurrency, setDestinationCurrency] = useState<string>(SELECTED_VALUE.MMK.toUpperCase());
   const [sourceValue, setSourceValue] = useState(1);
+  const sourceRate = rates[sourceCurrency];
+  const destinationRate = rates[destinationCurrency];
 
   useEffect(() => {
     calculateExchangeRate(sourceValue);
@@ -31,8 +34,6 @@ const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates }: Cur
   }, [] as { key: string; value: string }[]);
 
   const calculateExchangeRate = (val: number) => {
-    const sourceRate = rates[sourceCurrency];
-    const destinationRate = rates[destinationCurrency];
     if (typeof sourceRate === 'number' && typeof destinationRate === 'number') {
       const result = Number((val * (destinationRate / sourceRate)).toFixed(2));
       setSourceValue(val);
@@ -40,13 +41,6 @@ const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates }: Cur
     } else {
       console.error('Invalid currency codes');
     }
-  };
-
-  const swapCurrency = () => {
-    setSourceCurrency(destinationCurrency);
-    setDestinationCurrency(sourceCurrency);
-    setDestinationValue(sourceValue);
-    setSourceValue(destinationValue);
   };
 
   return (
@@ -66,6 +60,7 @@ const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates }: Cur
                   min={1}
                   onChange={event => calculateExchangeRate(event.target.value as number)}
                   sourceCurrency={sourceCurrency}
+                  defaultValue={1}
                 />
               </div>
               <div className="flex justify-start gap-x-[24px]">
@@ -79,15 +74,17 @@ const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates }: Cur
             </div>
             <div>
               <Typography color="black" className="font-[500]">
-                {/* MMK - USD (Rate - 1000) */}
-                {sourceCurrency}-{destinationCurrency} (Rate - {destinationValue})
+                1 {sourceCurrency} = {rates[destinationCurrency]} {destinationCurrency}
+              </Typography>
+              <Typography color="black" className="font-[500]">
+                1 {destinationCurrency} = {(1 / Number(destinationRate)).toFixed(5)} {sourceCurrency}
               </Typography>
               <Typography color="black" className="text-[12px] font-[400]">
-                Last Updated: Sat, 09 Sep 2023 23:07:22 GMT
+                Last Updated: {lastUpdated}
               </Typography>
             </div>
             <div className="flex justify-center">
-              <Button onClick={swapCurrency} />
+              <Button />
             </div>
           </div>
         </div>
