@@ -30,6 +30,16 @@ export type Rates = {
   lastUpdated?: string;
 };
 
+export type Countries = {
+  status?: string;
+  'status-code'?: string;
+  version?: string;
+  access?: string;
+  data: {
+    [key: string]: string;
+  };
+};
+
 export type ApiResponse = {
   currencies: {
     [key: string]: string;
@@ -48,4 +58,11 @@ export type ApiResponse = {
     [key: string]: number;
   };
   source: string;
+  status?: string;
+  'status-code'?: string;
+  version?: string;
+  access?: string;
+  data: {
+    [key: string]: string;
+  };
 };

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import { ApiResponse, CurrencyList, CurrencyLive, Rates } from '@/types/currency';
+import { ApiResponse, Countries, CurrencyList, CurrencyLive, Rates } from '@/types/currency';
 
 interface ParameterType {
   [key: string]: string | string[];
@@ -61,5 +61,9 @@ export class FetchAPI {
     }
   ): Promise<Rates> {
     return await this.sendApiRequest(path, params, 'https://currencyapi.net');
+  }
+
+  async getCountries(path: string, params: ParameterType = {}): Promise<Countries> {
+    return await this.sendApiRequest(path, params, 'https://api.first.org');
   }
 }

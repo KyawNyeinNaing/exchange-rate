@@ -13,3 +13,18 @@ export const filterValuesByQuery = (
           each.value.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, ''))
       );
 };
+
+export const formatNumberWithDecimal = (val: string): string => {
+  const result = Number(val)
+    ?.toString()
+    ?.replace(/[^0-9\.]+/g, '')
+    ?.replace(/([^\d]*)(\d*(\.\d{0,2})?)(.*)/, '$2')
+    ?.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+  return result;
+};
+
+export const formatNumber = (number: string) => {
+  return Number(number)
+    .toFixed(2)
+    .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+};

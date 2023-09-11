@@ -7,17 +7,27 @@ import AutoComplete from '@/components/Combobox';
 import InputNumber from '@/components/InputNumber';
 import InputText from '@/components/InputText';
 import { useWindowSize } from '@/hooks/useWindowSize';
-import { CurrencyList, Rates } from '@/types/currency';
+import { Countries, CurrencyList, Rates } from '@/types/currency';
+import { formatNumberWithDecimal } from '@/utils';
 import { SELECTED_VALUE, WINDOW_SIZE } from '@/utils/enum';
 import { Typography } from '@material-tailwind/react';
 
-const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates, lastUpdated }: CurrencyList & Rates) => {
+import 'flag-icons/css/flag-icons.min.css';
+
+const ExchangeRate: React.FC<CurrencyList & Rates & Countries> = ({
+  currencies,
+  rates,
+  lastUpdated,
+  data,
+}: CurrencyList & Rates & Countries) => {
   const [destinationValue, setDestinationValue] = useState<number>(0);
   const [destinationCurrency, setDestinationCurrency] = useState<string>(SELECTED_VALUE.MMK);
   const [sourceCurrency, setSourceCurrency] = useState<string>(SELECTED_VALUE.USD);
-  const [sourceValue, setSourceValue] = useState<number>(1);
+  const [sourceValue, setSourceValue] = useState<any>(1);
   const sourceRate = +rates[sourceCurrency];
   const destinationRate = +rates[destinationCurrency];
+  const fixedSourceRate = (1 * (destinationRate / sourceRate)).toFixed(5);
+  const fixedDestinationRate = (1 / (destinationRate / sourceRate)).toFixed(5);
 
   const { windowWidth } = useWindowSize();
 
@@ -40,9 +50,24 @@ const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates, lastU
     [] as { key: string; value: string }[]
   );
 
-  const calculateExchangeRate = (val: number) => {
+  // split iso code and country/region from countries object
+  const getIsoCode = Object?.entries(data)?.reduce(
+    (result, [key, value]) => {
+      result = [
+        ...result,
+        {
+          key,
+          value,
+        },
+      ];
+      return result;
+    },
+    [] as { key: string; value: string }[]
+  );
+
+  const calculateExchangeRate = (val: string) => {
     if (typeof sourceRate === 'number' && typeof destinationRate === 'number') {
-      const result = Number((val * (destinationRate / sourceRate)).toFixed(5));
+      const result = Number((Number(val) * (destinationRate / sourceRate)).toFixed(5));
       setSourceValue(val);
       setDestinationValue(result);
     } else {
@@ -72,9 +97,10 @@ const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates, lastU
                 <InputNumber
                   className="md:w-1/2 w-full"
                   min={1}
-                  onChange={event => calculateExchangeRate(event.target.value as number)}
+                  onChange={event => calculateExchangeRate(event.target.value as string)}
                   sourceCurrency={sourceCurrency}
                   defaultValue={1}
+                  addonIcon={<span className={`fi fi-${sourceCurrency.slice(0, 2).toLowerCase()}`} />}
                 />
               </div>
 
@@ -93,15 +119,22 @@ const ExchangeRate: React.FC<CurrencyList & Rates> = ({ currencies, rates, lastU
                   getValue={setDestinationCurrency}
                   initialVal={destinationCurrency as SELECTED_VALUE}
                 />
-                <InputText className="md:w-1/2 w-full" value={destinationValue.toString()} readOnly />
+                <InputText
+                  className="md:w-1/2 w-full"
+                  value={formatNumberWithDecimal(destinationValue.toString())}
+                  readOnly
+                />
               </div>
             </div>
             <div>
               <Typography color="black" className="font-[500]">
-                1 {sourceCurrency} = {+(1 * (destinationRate / sourceRate)).toFixed(5)} {destinationCurrency}
+                1 {sourceCurrency} = {formatNumberWithDecimal(fixedSourceRate)}{' '}
+                {fixedSourceRate.startsWith('0.000') && `(${fixedSourceRate})`}
+                {destinationCurrency}
               </Typography>
               <Typography color="black" className="font-[500]">
-                1 {destinationCurrency} = {+(1 / (destinationRate / sourceRate)).toFixed(5)} {sourceCurrency}
+                1 {destinationCurrency} = {formatNumberWithDecimal(fixedDestinationRate)}{' '}
+                {fixedDestinationRate.startsWith('0.000') && `(${fixedDestinationRate})`} {sourceCurrency}
               </Typography>
 
               <Typography color="black" className="text-[12px] font-[400]">

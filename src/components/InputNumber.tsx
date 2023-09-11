@@ -28,7 +28,7 @@ const InputNumber: React.FC<Props> = ({
       )}
       <input
         className={`block w-full h-[40px] rounded-md border-0 py-1.5 ${
-          addonIcon ? 'pl-7' : 'pl-3'
+          addonIcon ? 'pl-10' : 'pl-3'
         } pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 outline-none placeholder:text-gray-400 sm:text-sm sm:leading-6`}
         placeholder="0.00"
         aria-describedby="price-currency"
