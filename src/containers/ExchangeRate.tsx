@@ -8,7 +8,7 @@ import InputNumber from '@/components/InputNumber';
 import InputText from '@/components/InputText';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { Countries, CurrencyList, Rates } from '@/types/currency';
-import { formatNumberWithDecimal } from '@/utils';
+import { formatNumberWithDecimal, transformObjectsToArray } from '@/utils';
 import { SELECTED_VALUE, WINDOW_SIZE } from '@/utils/enum';
 import { Typography } from '@material-tailwind/react';
 
@@ -28,42 +28,14 @@ const ExchangeRate: React.FC<CurrencyList & Rates & Countries> = ({
   const destinationRate = +rates[destinationCurrency];
   const fixedSourceRate = (1 * (destinationRate / sourceRate)).toFixed(5);
   const fixedDestinationRate = (1 / (destinationRate / sourceRate)).toFixed(5);
-
   const { windowWidth } = useWindowSize();
+
+  // get currencies list
+  const getListCurrencies = transformObjectsToArray(currencies);
 
   useEffect(() => {
     calculateExchangeRate(sourceValue);
   }, [destinationCurrency, sourceCurrency]);
-
-  // split key and value
-  const list = Object?.entries(currencies)?.reduce(
-    (result, [key, value]) => {
-      result = [
-        ...result,
-        {
-          key,
-          value,
-        },
-      ];
-      return result;
-    },
-    [] as { key: string; value: string }[]
-  );
-
-  // split iso code and country/region from countries object
-  const getIsoCode = Object?.entries(data)?.reduce(
-    (result, [key, value]) => {
-      result = [
-        ...result,
-        {
-          key,
-          value,
-        },
-      ];
-      return result;
-    },
-    [] as { key: string; value: string }[]
-  );
 
   const calculateExchangeRate = (val: string) => {
     if (typeof sourceRate === 'number' && typeof destinationRate === 'number') {
@@ -89,7 +61,7 @@ const ExchangeRate: React.FC<CurrencyList & Rates & Countries> = ({
             <div className="flex flex-col items-center gap-y-[16px] space-y-[16px]">
               <div className="w-full flex md:flex-row flex-col justify-start gap-x-[24px] md:space-y-0 space-y-[12px]">
                 <AutoComplete
-                  values={list}
+                  values={getListCurrencies}
                   className="md:w-1/2 w-full"
                   getValue={setSourceCurrency}
                   initialVal={sourceCurrency as SELECTED_VALUE}
@@ -115,7 +87,7 @@ const ExchangeRate: React.FC<CurrencyList & Rates & Countries> = ({
               <div className="w-full flex md:flex-row flex-col justify-start items-start gap-x-[24px] md:space-y-0 space-y-[12px]">
                 <AutoComplete
                   className="md:w-1/2 w-full"
-                  values={list}
+                  values={getListCurrencies}
                   getValue={setDestinationCurrency}
                   initialVal={destinationCurrency as SELECTED_VALUE}
                 />
