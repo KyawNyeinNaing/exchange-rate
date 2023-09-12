@@ -8,7 +8,12 @@
     "start": "next start",
     "lint": "next lint",
     "code-style": "yarn eslint --ext ts,tsx .",
-    "code-style-fix": "yarn eslint --fix  --ext ts,tsx ."
+    "code-style-fix": "yarn eslint --fix  --ext ts,tsx .",
+    "husky": {
+      "hooks": {
+        "pre-commit": "lint-staged"
+      }
+    }
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",

@@ -28,3 +28,19 @@ export const formatNumber = (number: string) => {
     .toFixed(2)
     .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 };
+
+export const transformObjectsToArray = (data: { [key: string]: any }) => {
+  return Object?.entries(data)?.reduce(
+    (result, [key, value]) => {
+      result = [
+        ...result,
+        {
+          key,
+          value,
+        },
+      ];
+      return result;
+    },
+    [] as { key: string; value: string | string }[]
+  );
+};
