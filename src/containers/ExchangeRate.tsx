@@ -134,7 +134,7 @@ const ExchangeRate: React.FC<CurrencyList & Rates & Countries> = ({
               </Typography>
               <Typography color="black" className="font-[500]">
                 1 {destinationCurrency} = {formatNumberWithDecimal(fixedDestinationRate)}{' '}
-                {fixedDestinationRate.startsWith('0.000') && `(${fixedDestinationRate})`} {sourceCurrency}
+                {fixedDestinationRate.startsWith('0.0') && `(${fixedDestinationRate})`} {sourceCurrency}
               </Typography>
 
               <Typography color="black" className="text-[12px] font-[400]">
